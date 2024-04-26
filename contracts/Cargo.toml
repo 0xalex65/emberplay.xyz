@@ -1,0 +1,14 @@
+[package]
+name = "contract"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cosmwasm-std = "1.0"
+cosmwasm-storage = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+rand = "0.8"  // To simulate randomness, for actual deployment randomness should be handled differently
+cw20 = "1.0"  // Assuming usage of CW20 tokens
