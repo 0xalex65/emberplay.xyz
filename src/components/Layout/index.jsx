@@ -6,9 +6,11 @@ import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   return (
-    <div className="min-h-screen bg-black text-white font-theme">
+    <div className="min-h-screen flex flex-col bg-black text-white font-theme">
       <Header />
-      <Outlet />
+      <div className="min-h-[calc(100vh-160px)]">
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );

@@ -6,6 +6,7 @@ const Button = ({
   color = "primary",
   size = "sm",
   fullWidth = false,
+  className = "",
 }) => {
   const colorStyles = {
     primary: "bg-gradient-to-br from-[#88F7FE] to-[#397EFF]",
@@ -25,7 +26,7 @@ const Button = ({
       onClick={onClick}
       className={`${fullWidth ? `w-full` : `w-auto`} ${
         sizeStyles[size]
-      } px-5 rounded shadow ${colorStyles[color]}`}
+      } px-5 rounded shadow ${colorStyles[color]} ${className}`}
     >
       {children}
     </button>

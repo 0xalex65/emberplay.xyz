@@ -102,8 +102,8 @@ const FAQs = () => {
   ];
 
   return (
-    <div className="grid gap-20">
-      <h3 className="font-bold text-5xl text-center">
+    <div className="grid gap-10 md:gap-20">
+      <h3 className="font-bold text-4xl md:text-5xl text-center">
         Frequently Asked Questions
       </h3>
       <div className="grid gap-3">

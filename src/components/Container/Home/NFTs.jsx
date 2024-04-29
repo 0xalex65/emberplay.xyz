@@ -19,18 +19,18 @@ import NFT15 from "assets/images/nfts/15.jpg";
 
 const NFTs = () => {
   return (
-    <div className="grid gap-20">
-      <div className="flex items-center justify-center relative">
-        <h3 className="font-bold text-5xl">Our NFTs</h3>
+    <div className="grid gap-10 md:gap-20">
+      <div className="flex flex-col items-center gap-5 justify-center relative">
+        <h3 className="font-bold text-4xl md:text-5xl">Our NFTs</h3>
         <Link
           to="https://www.stargaze.zone/m/stars1s5l98e7rhe3d6f4cp67sv4q7qjaaffg8h0zaugzqyfgzzheyvepq9ykmm4/tokens"
           target="_blank"
-          className="absolute right-0 bottom-0"
+          className="relative md:absolute right-0 bottom-0"
         >
           <Button>Try to mint</Button>
         </Link>
       </div>
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <img src={NFT1} className="rounded-lg" />
         <img src={NFT2} className="rounded-lg" />
         <img src={NFT3} className="rounded-lg" />
