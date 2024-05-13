@@ -26,11 +26,11 @@ const Header = () => {
         <Link to="/">
           <img src={Logo} className="h-14 rounded" />
         </Link>
-        {/* {address ? (
-          <span>{address.replace(/^(.{6}).*(.{4})$/, "$1...$2")}</span>
+        {wallet.address ? (
+          <span>{wallet.address.replace(/^(.{6}).*(.{4})$/, "$1...$2")}</span>
         ) : (
           <Button onClick={handleConnectWallet}>Connect</Button>
-        )} */}
+        )}
       </div>
     </div>
   );

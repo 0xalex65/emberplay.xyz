@@ -53,20 +53,6 @@ async function clientMiddleware(req, res, next) {
   }
 }
 
-app.get("/current-round", clientMiddleware, async (req, res) => {
-  try {
-    const query = { current_round: {} };
-    const result = await req.cosmWasmClient.queryContractSmart(
-      contractAddress,
-      query
-    );
-    res.json(result);
-  } catch (error) {
-    console.error("Error querying current round:", error);
-    res.status(500).send("Error querying current round.");
-  }
-});
-
 io.on("connection", async (socket) => {
   console.log("A user connected");
 
@@ -74,13 +60,14 @@ io.on("connection", async (socket) => {
     console.log("User disconnected");
   });
 
-  socket.on("BoughtTickets", async () => {
+  socket.on("buy_tickets", async () => {
     try {
       const client = await getCosmWasmClient(
         "obtain lend client hospital creek famous meat foster distance sell yard spatial"
       );
       const query = "CurrentRound";
       const result = await client.queryContractSmart(contractAddress, query);
+      socket.broadcast.emit("update_current_round", result);
       socket.emit("update_current_round", result);
     } catch (error) {
       socket.emit("error", "Failed to fetch current round data");

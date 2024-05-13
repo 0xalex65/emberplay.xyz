@@ -7,6 +7,7 @@ const Button = ({
   size = "sm",
   fullWidth = false,
   className = "",
+  loading = false,
 }) => {
   const colorStyles = {
     primary: "bg-gradient-to-br from-[#88F7FE] to-[#397EFF]",
@@ -26,9 +27,16 @@ const Button = ({
       onClick={onClick}
       className={`${fullWidth ? `w-full` : `w-auto`} ${
         sizeStyles[size]
-      } px-5 rounded shadow ${colorStyles[color]} ${className}`}
+      } flex items-center justify-center px-5 rounded shadow disabled:opacity-60 ${
+        colorStyles[color]
+      } ${className}`}
+      disabled={loading}
     >
-      {children}
+      {loading ? (
+        <span className="block w-6 h-6 rounded-full border-2 border-white border-t-2 border-t-gray-300 animate-spin" />
+      ) : (
+        <>{children}</>
+      )}
     </button>
   );
 };
