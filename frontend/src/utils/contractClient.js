@@ -30,18 +30,6 @@ export async function buyLotteryTickets(client, senderAddress, amount) {
   );
 }
 
-// Function to execute the lottery draw
-export async function executeLotteryDraw(client, senderAddress) {
-  const executeMsg = "ExecuteLottery";
-
-  const fee = {
-    amount: [{ denom, amount: "5000" }],
-    gas: "200000",
-  };
-
-  return client.execute(senderAddress, contractAddress, executeMsg, fee);
-}
-
 // Query the current round details
 export async function queryCurrentRound(client) {
   const queryMsg = "CurrentRound";

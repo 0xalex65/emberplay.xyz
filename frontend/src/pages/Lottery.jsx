@@ -10,12 +10,10 @@ import {
   getSigningClient,
   queryCurrentRound,
   queryMyTickets,
-  executeLotteryDraw,
   buyLotteryTickets,
   queryPastWinners,
   queryLeftTime,
 } from "utils/contractClient";
-import { connectKeplr } from "utils/keplr";
 
 const socket = io(process.env.REACT_APP_SOCKET_URL);
 const unit = 1000000;
@@ -73,6 +71,7 @@ const Lottery = () => {
       theme: "dark",
     });
     socket.emit("buy_tickets");
+    setAmount(1);
   };
 
   useEffect(() => {
@@ -161,20 +160,23 @@ const Lottery = () => {
                   <div className="w-full flex h-[72px] rounded overflow-hidden bg-gray-900 relative">
                     <input
                       type="text"
-                      className="font-semibold bg-transparent appearance-none w-full text-2xl text-center pr-10"
+                      className="font-semibold bg-transparent appearance-none w-full text-2xl text-center pr-10 disabled:opacity-60"
                       value={amount}
                       onChange={(e) => handleChange(e.target.value)}
+                      disabled={loading}
                     />
                     <div className="flex flex-col absolute top-0 right-0">
                       <Button
                         className="text-2xl px-3 rounded-none"
                         onClick={() => setAmount(amount + 1)}
+                        disabled={loading}
                       >
                         +
                       </Button>
                       <Button
                         className="text-2xl px-3 rounded-none"
                         onClick={() => amount > 1 && setAmount(amount - 1)}
+                        disabled={loading}
                       >
                         -
                       </Button>

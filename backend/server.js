@@ -47,11 +47,11 @@ io.on("connection", async (socket) => {
     const client = await getCosmWasmClient(
       "obtain lend client hospital creek famous meat foster distance sell yard spatial"
     );
-    await queryCurrentRound(client);
+    await queryCurrentRound(client, socket);
   });
 });
 
-async function queryCurrentRound(client) {
+async function queryCurrentRound(client, socket) {
   try {
     const query = "CurrentRound";
     const result = await client.queryContractSmart(contractAddress, query);
