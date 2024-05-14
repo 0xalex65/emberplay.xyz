@@ -1,21 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Button from "components/Common/Button";
-import NFT1 from "assets/images/nfts/1.jpg";
-import NFT2 from "assets/images/nfts/2.jpg";
-import NFT3 from "assets/images/nfts/3.jpg";
-import NFT4 from "assets/images/nfts/4.jpg";
-import NFT5 from "assets/images/nfts/5.jpg";
-import NFT6 from "assets/images/nfts/6.jpg";
-import NFT7 from "assets/images/nfts/7.jpg";
-import NFT8 from "assets/images/nfts/8.jpg";
-import NFT9 from "assets/images/nfts/9.jpg";
-import NFT10 from "assets/images/nfts/10.jpg";
-import NFT11 from "assets/images/nfts/11.jpg";
-import NFT12 from "assets/images/nfts/12.jpg";
-import NFT13 from "assets/images/nfts/13.jpg";
-import NFT14 from "assets/images/nfts/14.jpg";
-import NFT15 from "assets/images/nfts/15.jpg";
+import NFT1 from "assets/images/nfts/1.png";
+import NFT2 from "assets/images/nfts/2.png";
+import NFT3 from "assets/images/nfts/3.png";
+import NFT4 from "assets/images/nfts/4.png";
+import NFT5 from "assets/images/nfts/5.png";
+import NFT6 from "assets/images/nfts/6.png";
+import NFT7 from "assets/images/nfts/7.png";
+import NFT8 from "assets/images/nfts/8.png";
+import NFT9 from "assets/images/nfts/9.png";
+import NFT10 from "assets/images/nfts/10.png";
+import NFT11 from "assets/images/nfts/11.png";
+import NFT12 from "assets/images/nfts/12.png";
+import NFT13 from "assets/images/nfts/13.png";
+import NFT14 from "assets/images/nfts/14.png";
+import NFT15 from "assets/images/nfts/15.png";
 
 const NFTs = () => {
   return (

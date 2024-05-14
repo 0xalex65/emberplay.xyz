@@ -1,7 +1,7 @@
-import FAQs from "components/Container/Home/FAQs";
-import NFTs from "components/Container/Home/NFTs";
-import Games from "components/Container/Home/Games";
 import React from "react";
+import Games from "components/Container/Home/Games";
+import NFTs from "components/Container/Home/NFTs";
+import FAQs from "components/Container/Home/FAQs";
 
 const Home = () => {
   return (

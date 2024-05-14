@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import NFT1 from "assets/images/nfts/1.jpg";
-import NFT2 from "assets/images/nfts/2.jpg";
-import NFT3 from "assets/images/nfts/3.jpg";
-import NFT4 from "assets/images/nfts/4.jpg";
-import NFT5 from "assets/images/nfts/5.jpg";
-import NFT6 from "assets/images/nfts/6.jpg";
-import NFT7 from "assets/images/nfts/7.jpg";
-import NFT8 from "assets/images/nfts/8.jpg";
-import NFT9 from "assets/images/nfts/9.jpg";
-import NFT10 from "assets/images/nfts/10.jpg";
+import NFT1 from "assets/images/nfts/1.png";
+import NFT2 from "assets/images/nfts/2.png";
+import NFT3 from "assets/images/nfts/3.png";
+import NFT4 from "assets/images/nfts/4.png";
+import NFT5 from "assets/images/nfts/5.png";
+import NFT6 from "assets/images/nfts/6.png";
+import NFT7 from "assets/images/nfts/7.png";
+import NFT8 from "assets/images/nfts/8.png";
+import NFT9 from "assets/images/nfts/9.png";
+import NFT10 from "assets/images/nfts/10.png";
 
 const Collapse = ({ question, answer, avatar }) => {
   const [opened, setOpened] = useState(false);
