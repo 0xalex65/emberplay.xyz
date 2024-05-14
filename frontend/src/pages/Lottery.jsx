@@ -98,6 +98,10 @@ const Lottery = () => {
       setCurrentRound({ ...data });
     });
 
+    socket.on("update_left_time", (data) => {
+      setLeftTime(data);
+    });
+
     socket.on("disconnect", () => {
       console.log("Disconnected from backend");
     });

@@ -8,16 +8,22 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: {} });
 const port = 8000;
-const maxRetries = 3;
+const maxRetries = 10;
 const rpcUrl = "https://rpc.elgafar-1.stargaze-apis.com";
 const contractAddress =
   "stars1z8tg6h6psf60dez0x6kglu9765mpekxjzpl506pesfdrkgt9fgjq2vcvz2";
+
+let adminWalletAddress;
 
 async function getCosmWasmClient(mnemonic, retries = 0) {
   try {
     const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
       prefix: "stars",
     });
+
+    const accounts = await wallet.getAccounts();
+    adminWalletAddress = accounts[0].address;
+
     const client = await SigningCosmWasmClient.connectWithSigner(
       rpcUrl,
       wallet
@@ -47,29 +53,44 @@ io.on("connection", async (socket) => {
     const client = await getCosmWasmClient(
       "obtain lend client hospital creek famous meat foster distance sell yard spatial"
     );
-    await queryCurrentRound(client, socket);
+    await queryCurrentRound(client);
   });
 });
 
-async function queryCurrentRound(client, socket) {
+async function queryCurrentRound(client) {
   try {
     const query = "CurrentRound";
     const result = await client.queryContractSmart(contractAddress, query);
-    socket.broadcast.emit("update_current_round", result);
-    socket.emit("update_current_round", result);
+    io.emit("update_current_round", result);
   } catch (error) {
-    socket.emit("error", "Failed to fetch current round data");
+    io.emit("error", "Failed to fetch current round data");
     console.error("Error fetching current round for socket:", error);
+  }
+}
+
+async function queryLeftTime(client) {
+  try {
+    const query = "LeftTime";
+    const result = await client.queryContractSmart(contractAddress, query);
+    io.emit("update_left_time", result);
+  } catch (error) {
+    io.emit("error", "Failed to fetch left time until next round");
+    console.error("Error fetching left time until next round:", error);
   }
 }
 
 async function executeLottery(client) {
   try {
+    const fee = {
+      amount: [{ denom: "ustars", amount: "5000" }],
+      gas: "200000",
+    };
     const executeMsg = "ExecuteLottery";
     const response = await client.execute(
+      adminWalletAddress,
       contractAddress,
       executeMsg,
-      "auto-lottery draw"
+      fee
     );
     console.log("Lottery executed:", response.transactionHash);
   } catch (error) {
@@ -83,11 +104,12 @@ async function startLotteryDraw() {
   );
   setInterval(async () => {
     await executeLottery(client);
-    await queryCurrentRound(client);
-  }, 3600000); // 3600000 milliseconds = 60 minutes
+    queryCurrentRound(client);
+    queryLeftTime(client);
+  }, 3600000);
 }
 
-server.listen(port, () => {
+server.listen(port, async () => {
+  await startLotteryDraw();
   console.log(`Server running on http://localhost:${port}`);
-  startLotteryDraw();
 });
