@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import io from "socket.io-client";
+import Countdown from "react-countdown";
 import Button from "components/Common/Button";
 import ChampionCup from "assets/images/champion-cup.png";
-import io from "socket.io-client";
 
 import {
   getSigningClient,
@@ -12,6 +13,7 @@ import {
   executeLotteryDraw,
   buyLotteryTickets,
   queryPastWinners,
+  queryLeftTime,
 } from "utils/contractClient";
 import { connectKeplr } from "utils/keplr";
 
@@ -24,6 +26,7 @@ const Lottery = () => {
   const [amount, setAmount] = useState(1);
   const [signingClient, setSigningClient] = useState(null);
   const [currentRound, setCurrentRound] = useState(null);
+  const [leftTime, setLeftTime] = useState(0);
   const [myTickets, setMyTickets] = useState(null);
   const [pastWinners, setPastWinners] = useState(null);
   const handleChange = (val) => setAmount(isNaN(val * 1) ? 1 : val * 1);
@@ -32,6 +35,12 @@ const Lottery = () => {
   const fetchCurrentRound = async (client) => {
     const roundData = await queryCurrentRound(client);
     setCurrentRound(roundData);
+  };
+
+  /// Fetch the left time until next round;
+  const fetchLeftTime = async (client) => {
+    const leftTimeData = await queryLeftTime(client);
+    setLeftTime(leftTimeData);
   };
 
   // Fetch the current user's tickets
@@ -72,6 +81,7 @@ const Lottery = () => {
         const client = await getSigningClient(wallet.signer);
         setSigningClient(client);
         fetchCurrentRound(client);
+        fetchLeftTime(client);
         fetchMyTickets(client, wallet.address);
       }
     };
@@ -94,18 +104,31 @@ const Lottery = () => {
     });
   }, []);
 
+  const timerRenderer = ({ hours, minutes, seconds }) => {
+    return (
+      <span>
+        {minutes}m {seconds}s
+      </span>
+    );
+  };
+
   return (
     <>
-      {wallet.signer && (
+      {currentRound && (
         <div className="px-5 py-20">
           <div className="w-full max-w-7xl mx-auto">
             <div className="bg-gray-800 rounded-xl p-20">
               <div className="grid gap-10">
                 <div className="flex flex-col gap-3 items-center">
                   <p className="font-medium text-2xl">
-                    Time until round x ends
+                    Time until round {currentRound?.index} ends
                   </p>
-                  <p className="font-bold text-3xl">55m 46s</p>
+                  <p className="font-bold text-3xl">
+                    <Countdown
+                      date={leftTime.time * 1000}
+                      renderer={timerRenderer}
+                    />
+                  </p>
                 </div>
                 <div className="grid grid-cols-3 gap-5">
                   <div className="flex flex-col items-center gap-3">
@@ -129,7 +152,9 @@ const Lottery = () => {
                   <span>Reward for winners</span>
                   <img src={ChampionCup} className="w-32" />
                   <span className="font-semibold text-xl">
-                    {getCurrentRoundTotalTickets() * 0.99} STARS
+                    {Math.floor(getCurrentRoundTotalTickets() * 0.99 * 100) /
+                      100}{" "}
+                    STARS
                   </span>
                 </div>
                 <div className="w-full max-w-xs flex flex-col gap-5 items-center">

@@ -1,7 +1,7 @@
 use crate::error::ContractError;
 use crate::msg::{
-    CurrentRoundResponse, ExecuteMsg, InstantiateMsg, MyTicketsResponse, PastWinnersResponse,
-    QueryMsg,
+    CurrentRoundResponse, ExecuteMsg, InstantiateMsg, LeftTimeResponse, MyTicketsResponse,
+    PastWinnersResponse, QueryMsg,
 };
 use crate::state::{LotteryRound, Ticket, CURRENT_ROUND, NEXT_DRAW, OWNER, PAST_ROUNDS};
 use cosmwasm_std::{
@@ -21,7 +21,8 @@ pub fn instantiate(
     let initial_owner = info.sender.clone();
 
     // Initialize empty current round and store owner address
-    let initial_round = LotteryRound {
+    let initial_round: LotteryRound = LotteryRound {
+        index: Uint128::one(),
         tickets: vec![],
         winner: None,
         pot: Uint128::zero(),
@@ -138,6 +139,7 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
         CURRENT_ROUND.save(
             deps.storage,
             &LotteryRound {
+                index: current_round.index + Uint128::new(1),
                 tickets: vec![],
                 winner: Some(winner.clone()),
                 pot: Uint128::zero(),
@@ -165,12 +167,14 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         QueryMsg::PastWinners { round_number } => {
             to_json_binary(&query_past_winners(deps, round_number)?)
         }
+        QueryMsg::LeftTime => to_json_binary(&query_left_time(deps)?),
     }
 }
 
 fn query_current_round(deps: Deps) -> StdResult<CurrentRoundResponse> {
     let round = CURRENT_ROUND.load(deps.storage)?;
     Ok(CurrentRoundResponse {
+        index: round.index,
         tickets: round.tickets,
         pot: round.pot,
     })
@@ -205,4 +209,9 @@ fn query_past_winners(deps: Deps, round_number: u64) -> StdResult<PastWinnersRes
         winner: round.winner.map(|w| w.to_string()),
         pot: round.pot,
     })
+}
+
+fn query_left_time(deps: Deps) -> StdResult<LeftTimeResponse> {
+    let time = NEXT_DRAW.load(deps.storage)?;
+    Ok(LeftTimeResponse { time })
 }

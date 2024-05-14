@@ -17,10 +17,12 @@ pub enum QueryMsg {
     CurrentRound,
     MyTickets { user: Option<String> },
     PastWinners { round_number: u64 },
+    LeftTime,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct CurrentRoundResponse {
+    pub index: Uint128,
     pub tickets: Vec<Ticket>,
     pub pot: Uint128,
 }
@@ -36,4 +38,9 @@ pub struct PastWinnersResponse {
     pub tickets: Vec<Ticket>,
     pub winner: Option<String>,
     pub pot: Uint128,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct LeftTimeResponse {
+    pub time: u64,
 }

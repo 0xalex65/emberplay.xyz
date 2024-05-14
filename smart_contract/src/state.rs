@@ -11,6 +11,7 @@ pub struct Ticket {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct LotteryRound {
+    pub index: Uint128,
     pub tickets: Vec<Ticket>,
     pub winner: Option<Addr>,
     pub pot: Uint128,

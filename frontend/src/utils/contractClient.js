@@ -11,14 +11,23 @@ export async function getSigningClient(signer) {
 
 // Function to buy tickets in the lottery
 export async function buyLotteryTickets(client, senderAddress, amount) {
-  const executeMsg = { BuyTickets: { amount: amount } };
+  const executeMsg = { BuyTickets: { amount } };
 
   const fee = {
     amount: [{ denom, amount: "5000" }], // Adjust according to expected gas fees
     gas: "200000",
   };
 
-  return await client.execute(senderAddress, contractAddress, executeMsg, fee);
+  const funds = [{ denom: "ustars", amount: amount.toString() }];
+
+  return await client.execute(
+    senderAddress,
+    contractAddress,
+    executeMsg,
+    fee,
+    "Buy tickets",
+    funds
+  );
 }
 
 // Function to execute the lottery draw
@@ -48,5 +57,11 @@ export async function queryMyTickets(client, userAddress) {
 // Query past winners by round number
 export async function queryPastWinners(client, roundNumber) {
   const queryMsg = { PastWinners: { round_number: roundNumber } };
+  return await client.queryContractSmart(contractAddress, queryMsg);
+}
+
+// Query left time until next round
+export async function queryLeftTime(client) {
+  const queryMsg = "LeftTime";
   return await client.queryContractSmart(contractAddress, queryMsg);
 }
