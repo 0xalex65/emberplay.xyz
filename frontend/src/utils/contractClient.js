@@ -1,8 +1,12 @@
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import {
+  SigningCosmWasmClient,
+  CosmWasmClient,
+} from "@cosmjs/cosmwasm-stargate";
 
 const rpcUrl = process.env.REACT_APP_RPC_URL;
 const denom = "ustars";
 const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+const nonSigningClient = await CosmWasmClient.connect(rpcUrl);
 
 // Function to create a Signing CosmWasm Client for transactions and queries
 export async function getSigningClient(signer) {
@@ -31,9 +35,9 @@ export async function buyLotteryTickets(client, senderAddress, amount) {
 }
 
 // Query the current round details
-export async function queryCurrentRound(client) {
+export async function queryCurrentRound() {
   const queryMsg = "CurrentRound";
-  return await client.queryContractSmart(contractAddress, queryMsg);
+  return await nonSigningClient.queryContractSmart(contractAddress, queryMsg);
 }
 
 // Query the current user's tickets
@@ -43,13 +47,13 @@ export async function queryMyTickets(client, userAddress) {
 }
 
 // Query past winners by round number
-export async function queryPastWinners(client, roundNumber) {
+export async function queryPastWinners(roundNumber) {
   const queryMsg = { PastWinners: { round_number: roundNumber } };
-  return await client.queryContractSmart(contractAddress, queryMsg);
+  return await nonSigningClient.queryContractSmart(contractAddress, queryMsg);
 }
 
 // Query left time until next round
-export async function queryLeftTime(client) {
+export async function queryLeftTime() {
   const queryMsg = "LeftTime";
-  return await client.queryContractSmart(contractAddress, queryMsg);
+  return await nonSigningClient.queryContractSmart(contractAddress, queryMsg);
 }

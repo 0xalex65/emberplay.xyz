@@ -30,15 +30,15 @@ const Lottery = () => {
   const handleChange = (val) => setAmount(isNaN(val * 1) ? 1 : val * 1);
 
   // Fetch the current round data
-  const fetchCurrentRound = async (client) => {
-    const roundData = await queryCurrentRound(client);
+  const fetchCurrentRound = async () => {
+    const roundData = await queryCurrentRound();
     setCurrentRound(roundData);
   };
 
   /// Fetch the left time until next round;
-  const fetchLeftTime = async (client) => {
-    const leftTimeData = await queryLeftTime(client);
-    setLeftTime(leftTimeData);
+  const fetchLeftTime = async () => {
+    const leftTimeData = await queryLeftTime();
+    setLeftTime(leftTimeData.time);
   };
 
   // Fetch the current user's tickets
@@ -48,8 +48,8 @@ const Lottery = () => {
   };
 
   // Fetch past winners for a given round
-  const fetchPastWinners = async (client, roundNum) => {
-    const winnersData = await queryPastWinners(client, roundNum);
+  const fetchPastWinners = async (roundNum) => {
+    const winnersData = await queryPastWinners(roundNum);
     setPastWinners(winnersData);
   };
 
@@ -64,7 +64,10 @@ const Lottery = () => {
   };
 
   const handleBuyTickets = async () => {
-    setLoading(true);
+    if (!wallet.signer) {
+      toast.warning("Please connect wallet");
+      return;
+    }
     await buyLotteryTickets(signingClient, wallet.address, amount * unit)
       .then(() => {
         toast.success(`Bought ${amount} tickets successfully.`);
@@ -79,11 +82,11 @@ const Lottery = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      fetchCurrentRound();
+      fetchLeftTime();
       if (wallet.signer) {
         const client = await getSigningClient(wallet.signer);
         setSigningClient(client);
-        fetchCurrentRound(client);
-        fetchLeftTime(client);
         fetchMyTickets(client, wallet.address);
       }
     };
@@ -101,7 +104,7 @@ const Lottery = () => {
     });
 
     socket.on("update_left_time", (data) => {
-      setLeftTime(data);
+      setLeftTime(data.time);
     });
 
     socket.on("disconnect", () => {
@@ -129,10 +132,12 @@ const Lottery = () => {
                     Time until round {currentRound?.index} ends
                   </p>
                   <p className="font-bold text-3xl">
-                    <Countdown
-                      date={leftTime.time * 1000}
-                      renderer={timerRenderer}
-                    />
+                    {leftTime && (
+                      <Countdown
+                        date={leftTime * 1000}
+                        renderer={timerRenderer}
+                      />
+                    )}
                   </p>
                 </div>
                 <div className="grid grid-cols-3 gap-5">
