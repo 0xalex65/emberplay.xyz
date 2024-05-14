@@ -68,6 +68,7 @@ const Lottery = () => {
       toast.warning("Please connect wallet");
       return;
     }
+    setLoading(true);
     await buyLotteryTickets(signingClient, wallet.address, amount * unit)
       .then(() => {
         toast.success(`Bought ${amount} tickets successfully.`);
