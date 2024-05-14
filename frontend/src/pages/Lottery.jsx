@@ -65,13 +65,16 @@ const Lottery = () => {
 
   const handleBuyTickets = async () => {
     setLoading(true);
-    await buyLotteryTickets(signingClient, wallet.address, amount * unit);
+    await buyLotteryTickets(signingClient, wallet.address, amount * unit)
+      .then(() => {
+        toast.success(`Bought ${amount} tickets successfully.`);
+        socket.emit("buy_tickets");
+        setAmount(1);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
     setLoading(false);
-    toast.success(`Bought ${amount} tickets successfully.`, {
-      theme: "dark",
-    });
-    socket.emit("buy_tickets");
-    setAmount(1);
   };
 
   useEffect(() => {
@@ -94,7 +97,6 @@ const Lottery = () => {
     });
 
     socket.on("update_current_round", (data) => {
-      console.log("Current Round Data:", data);
       setCurrentRound({ ...data });
     });
 

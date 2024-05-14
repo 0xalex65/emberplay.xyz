@@ -22,7 +22,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
       </Provider>
-      <ToastContainer />
+      <ToastContainer theme="dark" />
     </div>
   );
 };
