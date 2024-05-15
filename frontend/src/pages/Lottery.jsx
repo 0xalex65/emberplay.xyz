@@ -187,28 +187,74 @@ const Lottery = () => {
                   </span>
                 </div>
                 <div className="w-full max-w-xs flex flex-col gap-5 items-center">
-                  <div className="w-full flex h-[72px] rounded overflow-hidden bg-gray-900 relative">
-                    <input
-                      type="text"
-                      className="font-semibold bg-transparent appearance-none w-full text-2xl text-center pr-10 disabled:opacity-60"
-                      value={amount}
-                      onChange={(e) => handleChange(e.target.value)}
-                      disabled={loading}
-                    />
-                    <div className="flex flex-col absolute top-0 right-0">
-                      <Button
-                        className="text-2xl px-3 rounded-none"
-                        onClick={() => setAmount(amount + 1)}
+                  <div className="grid gap-2">
+                    <div className="w-full flex h-[72px] rounded overflow-hidden bg-gray-900 relative">
+                      <input
+                        type="text"
+                        className="font-semibold bg-transparent appearance-none w-full text-2xl text-center pr-10 disabled:opacity-60"
+                        value={amount}
+                        onChange={(e) => handleChange(e.target.value)}
                         disabled={loading}
+                      />
+                      <div className="flex flex-col absolute top-0 right-0">
+                        <Button
+                          className="text-2xl px-3 rounded-none"
+                          onClick={() => setAmount(amount + 1)}
+                          disabled={loading}
+                        >
+                          +
+                        </Button>
+                        <Button
+                          className="text-2xl px-3 rounded-none"
+                          onClick={() => amount > 1 && setAmount(amount - 1)}
+                          disabled={loading}
+                        >
+                          -
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="w-full flex gap-1">
+                      <Button
+                        className="!px-0"
+                        fullWidth
+                        onClick={() => setAmount(5)}
                       >
-                        +
+                        5
                       </Button>
                       <Button
-                        className="text-2xl px-3 rounded-none"
-                        onClick={() => amount > 1 && setAmount(amount - 1)}
-                        disabled={loading}
+                        className="!px-0"
+                        fullWidth
+                        onClick={() => setAmount(10)}
                       >
-                        -
+                        10
+                      </Button>
+                      <Button
+                        className="!px-0"
+                        fullWidth
+                        onClick={() => setAmount(50)}
+                      >
+                        50
+                      </Button>
+                      <Button
+                        className="!px-0"
+                        fullWidth
+                        onClick={() => setAmount(100)}
+                      >
+                        100
+                      </Button>
+                      <Button
+                        className="!px-0"
+                        fullWidth
+                        onClick={() => setAmount(500)}
+                      >
+                        500
+                      </Button>
+                      <Button
+                        className="!px-0"
+                        fullWidth
+                        onClick={() => setAmount(1000)}
+                      >
+                        1000
                       </Button>
                     </div>
                   </div>
