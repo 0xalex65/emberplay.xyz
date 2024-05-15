@@ -3,12 +3,6 @@ import NFT1 from "assets/images/nfts/1.png";
 import NFT2 from "assets/images/nfts/2.png";
 import NFT3 from "assets/images/nfts/3.png";
 import NFT4 from "assets/images/nfts/4.png";
-import NFT5 from "assets/images/nfts/5.png";
-import NFT6 from "assets/images/nfts/6.png";
-import NFT7 from "assets/images/nfts/7.png";
-import NFT8 from "assets/images/nfts/8.png";
-import NFT9 from "assets/images/nfts/9.png";
-import NFT10 from "assets/images/nfts/10.png";
 
 const Collapse = ({ question, answer, avatar }) => {
   const [opened, setOpened] = useState(false);
@@ -40,64 +34,28 @@ const Collapse = ({ question, answer, avatar }) => {
 const FAQs = () => {
   const faqs = [
     {
-      question: "How do I buy a lottery ticket?",
+      question: "What is the Ember lottery?",
       answer:
-        "You can purchase lottery tickets from authorized retailers, through our official website, or via our mobile app. Be sure to check that online purchasing is available in your location.",
+        "Bet STARS in a lottery against other players for a chance to win the entire prize pool.",
       avatar: NFT1,
     },
     {
-      question: "What are the age requirements to play the lottery?",
+      question: "How much is one ticket?",
       answer:
-        "Participants must be at least 18 years old to buy a lottery ticket and claim any winnings, though this age requirement may vary by jurisdiction. Please confirm the age requirement in your area.",
+        "1 STARS is 1 ticket, the morevalue you bet, the higher probability you'll have of winning.",
       avatar: NFT2,
     },
     {
-      question: "How can I check if I have won?",
+      question: "How often does the lottery reset?",
       answer:
-        "Winning numbers are posted on our official website and through our mobile app shortly after each draw. You can also visit any authorized retailer to check your tickets.",
+        "Every 60 minutes, a new stars jackpot round begins. There can be unlimited participants, but only one winner.",
       avatar: NFT3,
     },
     {
-      question: "What should I do if I win?",
+      question: "How does Emberplay interact with the Ember NFT collection?",
       answer:
-        "If you win, sign the back of your ticket and store it in a safe place. Contact the lottery office as soon as possible to claim your prize. Prizes may be claimed by mail or in person, depending on the amount.",
+        "Emberplay takes 2% fee where 50% gets redistributed to the Ember NFT collection holders.",
       avatar: NFT4,
-    },
-    {
-      question: "How long do I have to claim my winnings?",
-      answer:
-        "The time frame to claim a prize varies by state or country but typically ranges from 90 days to one year from the draw date. Check the rules specific to your lottery game for the exact period.",
-      avatar: NFT5,
-    },
-    {
-      question: "Are lottery winnings taxable?",
-      answer:
-        "Yes, lottery winnings are subject to federal and possibly state taxes depending on your location. We recommend consulting with a tax professional to understand your obligations.",
-      avatar: NFT6,
-    },
-    {
-      question: "Can I remain anonymous if I win?",
-      answer:
-        "Some jurisdictions allow winners to remain anonymous, while others require public disclosure. Check the specific rules in your area or consult with legal counsel.",
-      avatar: NFT7,
-    },
-    {
-      question: "What happens to unclaimed prizes?",
-      answer:
-        "Unclaimed prizes are handled differently by each lottery operator. Generally, these funds are returned to the community through various public initiatives like education, parks, and other public services.",
-      avatar: NFT8,
-    },
-    {
-      question: "Can I buy lottery tickets in advance?",
-      answer:
-        "Yes, most lotteries allow you to purchase tickets for multiple draws in advance. Check the details on our website or at an authorized retailer.",
-      avatar: NFT9,
-    },
-    {
-      question: "Is there a limit to how many tickets I can buy?",
-      answer:
-        "There is typically no limit to the number of tickets you can buy, but we encourage responsible gambling. Always play within your means and consider the odds before purchasing multiple tickets.",
-      avatar: NFT10,
     },
   ];
 
