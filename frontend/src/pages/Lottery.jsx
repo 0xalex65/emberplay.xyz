@@ -62,6 +62,14 @@ const Lottery = () => {
     setPastWinners(winnersData);
   };
 
+  const getTotalTicketCount = (round) => {
+    let count = 0;
+    round.tickets.map((r) => {
+      count += r.count;
+    });
+    return count;
+  };
+
   const getCurrentRoundTotalTickets = () => {
     let count = 0;
     if (currentRound) {
@@ -217,9 +225,49 @@ const Lottery = () => {
             </div>
             <div className="grid gap-10">
               <h3 className="font-bold text-3xl text-center">Past Rounds</h3>
-              {pastRounds?.map((round) => (
-                <div>{round.index}</div>
-              ))}
+              <div className="grid gap-5">
+                {pastRounds?.map((round) => {
+                  const totalCount = getTotalTicketCount(round);
+
+                  return (
+                    <div
+                      className="bg-gray-800 rounded-xl p-10 flex flex-col items-center gap-5"
+                      key={round.index}
+                    >
+                      <p className="font-medium text-xl">Round {round.index}</p>
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-gray-900">
+                            <td className="p-3"></td>
+                            <td className="p-3">Player address</td>
+                            <td className="p-3">Ticket Count</td>
+                            <td className="p-3">Winning Chance</td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {round.tickets.map((ticket, i) => (
+                            <tr key={i} className="even:bg-gray-900">
+                              <td className="px-3">
+                                {ticket.owner === round.winner && (
+                                  <img src={ChampionCup} className="w-8" />
+                                )}
+                              </td>
+                              <td className="p-3">{ticket.owner}</td>
+                              <td className="p-3">{ticket.count}</td>
+                              <td className="p-3">
+                                {Math.round(
+                                  (ticket.count / totalCount) * 100000
+                                ) / 1000}
+                                %
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
