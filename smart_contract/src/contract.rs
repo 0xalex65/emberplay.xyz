@@ -1,12 +1,12 @@
 use crate::error::ContractError;
 use crate::msg::{
     CurrentRoundResponse, ExecuteMsg, InstantiateMsg, LeftTimeResponse, MyTicketsResponse,
-    PastWinnersResponse, QueryMsg,
+    PastRoundsResponse, PastWinnersResponse, QueryMsg,
 };
 use crate::state::{LotteryRound, Ticket, CURRENT_ROUND, NEXT_DRAW, OWNER, PAST_ROUNDS};
 use cosmwasm_std::{
-    entry_point, to_json_binary, BankMsg, Binary, Coin, Deps, DepsMut, Env, MessageInfo, Response,
-    StdError, StdResult, Uint128,
+    entry_point, to_json_binary, BankMsg, Binary, Coin, Deps, DepsMut, Env, MessageInfo, Order,
+    Response, StdError, StdResult, Uint128,
 };
 
 const TICKET_PRICE: u128 = 1_000_000; // Assuming 1 STARS = 1_000_000 units
@@ -168,6 +168,7 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
             to_json_binary(&query_past_winners(deps, round_number)?)
         }
         QueryMsg::LeftTime => to_json_binary(&query_left_time(deps)?),
+        QueryMsg::AllPastRounds => to_json_binary(&query_all_past_rounds(deps)?),
     }
 }
 
@@ -214,4 +215,12 @@ fn query_past_winners(deps: Deps, round_number: u64) -> StdResult<PastWinnersRes
 fn query_left_time(deps: Deps) -> StdResult<LeftTimeResponse> {
     let time = NEXT_DRAW.load(deps.storage)?;
     Ok(LeftTimeResponse { time })
+}
+
+fn query_all_past_rounds(deps: Deps) -> StdResult<PastRoundsResponse> {
+    let rounds: Vec<LotteryRound> = PAST_ROUNDS
+        .range(deps.storage, None, None, Order::Ascending)
+        .map(|item| item.map(|(_key, value)| value))
+        .collect::<StdResult<Vec<LotteryRound>>>()?;
+    Ok(PastRoundsResponse { rounds })
 }

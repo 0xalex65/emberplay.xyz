@@ -1,4 +1,4 @@
-use crate::state::Ticket;
+use crate::state::{LotteryRound, Ticket};
 use cosmwasm_std::Uint128;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -18,6 +18,7 @@ pub enum QueryMsg {
     MyTickets { user: Option<String> },
     PastWinners { round_number: u64 },
     LeftTime,
+    AllPastRounds
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -43,4 +44,9 @@ pub struct PastWinnersResponse {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct LeftTimeResponse {
     pub time: u64,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct PastRoundsResponse {
+    pub rounds: Vec<LotteryRound>,
 }
