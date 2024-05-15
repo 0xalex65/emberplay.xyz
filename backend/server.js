@@ -1,17 +1,18 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+require("dotenv").config();
 const { SigningCosmWasmClient } = require("@cosmjs/cosmwasm-stargate");
 const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: {} });
-const port = 8000;
+const port = process.env.PORT || 8000;
 const maxRetries = 10;
+const walletMnemonic = process.env.WALLET_MNEMONIC;
 const rpcUrl = "https://rpc.elgafar-1.stargaze-apis.com";
-const contractAddress =
-  "stars1z8tg6h6psf60dez0x6kglu9765mpekxjzpl506pesfdrkgt9fgjq2vcvz2";
+const contractAddress = process.env.CONTRACT_ADDRESS;
 
 let adminWalletAddress;
 
@@ -50,9 +51,7 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("buy_tickets", async () => {
-    const client = await getCosmWasmClient(
-      "obtain lend client hospital creek famous meat foster distance sell yard spatial"
-    );
+    const client = await getCosmWasmClient(walletMnemonic);
     await queryCurrentRound(client);
   });
 });
@@ -99,9 +98,7 @@ async function executeLottery(client) {
 }
 
 async function startLotteryDraw() {
-  const client = await getCosmWasmClient(
-    "obtain lend client hospital creek famous meat foster distance sell yard spatial"
-  );
+  const client = await getCosmWasmClient(walletMnemonic);
   setInterval(async () => {
     await executeLottery(client);
     queryCurrentRound(client);
