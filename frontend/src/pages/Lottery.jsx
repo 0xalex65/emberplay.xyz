@@ -13,6 +13,7 @@ import {
   buyLotteryTickets,
   queryPastWinners,
   queryLeftTime,
+  queryPastRounds,
 } from "utils/contractClient";
 
 const socket = io(process.env.REACT_APP_SOCKET_URL);
@@ -25,6 +26,7 @@ const Lottery = () => {
   const [signingClient, setSigningClient] = useState(null);
   const [currentRound, setCurrentRound] = useState(null);
   const [leftTime, setLeftTime] = useState(0);
+  const [pastRounds, setPastRounds] = useState();
   const [myTickets, setMyTickets] = useState(null);
   const [pastWinners, setPastWinners] = useState(null);
   const handleChange = (val) => setAmount(isNaN(val * 1) ? 1 : val * 1);
@@ -39,6 +41,13 @@ const Lottery = () => {
   const fetchLeftTime = async () => {
     const leftTimeData = await queryLeftTime();
     setLeftTime(leftTimeData.time);
+  };
+
+  /// Fetch the past rounds;
+  const fetchPastRounds = async () => {
+    const data = await queryPastRounds();
+    console.log(data.rounds);
+    setPastRounds(data.rounds);
   };
 
   // Fetch the current user's tickets
@@ -85,6 +94,7 @@ const Lottery = () => {
     const fetchData = async () => {
       fetchCurrentRound();
       fetchLeftTime();
+      fetchPastRounds();
       if (wallet.signer) {
         const client = await getSigningClient(wallet.signer);
         setSigningClient(client);
@@ -125,7 +135,7 @@ const Lottery = () => {
     <>
       {currentRound && (
         <div className="px-5 py-20">
-          <div className="w-full max-w-7xl mx-auto">
+          <div className="w-full max-w-7xl mx-auto grid gap-20">
             <div className="bg-gray-800 rounded-xl p-20">
               <div className="grid gap-10">
                 <div className="flex flex-col gap-3 items-center">
@@ -204,6 +214,12 @@ const Lottery = () => {
                   </Button>
                 </div>
               </div>
+            </div>
+            <div className="grid gap-10">
+              <h3 className="font-bold text-3xl text-center">Past Rounds</h3>
+              {pastRounds?.map((round) => (
+                <div>{round.index}</div>
+              ))}
             </div>
           </div>
         </div>

@@ -57,3 +57,9 @@ export async function queryLeftTime() {
   const queryMsg = "LeftTime";
   return await nonSigningClient.queryContractSmart(contractAddress, queryMsg);
 }
+
+// Query past rounds
+export async function queryPastRounds() {
+  const queryMsg = "AllPastRounds";
+  return await nonSigningClient.queryContractSmart(contractAddress, queryMsg);
+}

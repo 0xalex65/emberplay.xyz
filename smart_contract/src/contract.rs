@@ -89,14 +89,14 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
     }
 
     // Perform lottery logic as before (select winner, send rewards, etc.)
-    let current_round = CURRENT_ROUND.load(deps.storage)?;
+    let mut current_round = CURRENT_ROUND.load(deps.storage)?;
     let ticket_sum: u64 = current_round.tickets.iter().map(|t| t.count).sum();
 
     if ticket_sum == 0 {
         // Update next draw time
         let new_draw_time = env.block.time.seconds() + 60 * 60;
         NEXT_DRAW.save(deps.storage, &new_draw_time)?;
-        
+
         return Err(ContractError::NoTickets {});
     }
 
@@ -138,7 +138,9 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
             },
         ];
 
-        // Move current round to past rounds
+        current_round.winner = Some(winner.clone());
+        CURRENT_ROUND.save(deps.storage, &current_round)?;
+
         PAST_ROUNDS.save(deps.storage, env.block.height, &current_round)?;
         CURRENT_ROUND.save(
             deps.storage,
