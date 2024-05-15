@@ -93,6 +93,10 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
     let ticket_sum: u64 = current_round.tickets.iter().map(|t| t.count).sum();
 
     if ticket_sum == 0 {
+        // Update next draw time
+        let new_draw_time = env.block.time.seconds() + 60 * 60;
+        NEXT_DRAW.save(deps.storage, &new_draw_time)?;
+        
         return Err(ContractError::NoTickets {});
     }
 
