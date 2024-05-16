@@ -46,7 +46,6 @@ const Lottery = () => {
   /// Fetch the past rounds;
   const fetchPastRounds = async () => {
     const data = await queryPastRounds();
-    console.log(data.rounds);
     setPastRounds(data.rounds);
   };
 
@@ -81,9 +80,10 @@ const Lottery = () => {
   };
 
   const getMyTicketCount = () => {
-    return currentRound.tickets.filter(
+    const myTicket = currentRound.tickets.filter(
       (ticket) => ticket.owner === wallet.address
-    )[0].count;
+    );
+    return myTicket.length > 0 ? myTicket[0].count : 0;
   };
 
   const handleBuyTickets = async () => {
@@ -204,10 +204,19 @@ const Lottery = () => {
                     <div className="flex flex-col items-center gap-3">
                       <span className="text-xl">Winning Chance</span>
                       <span className="font-semibold text-xl">
-                        {Math.round(
-                          (getMyTicketCount() / getCurrentRoundTotalTickets()) *
-                            100000
-                        ) / 1000}
+                        {isNaN(
+                          Math.round(
+                            (getMyTicketCount() /
+                              getCurrentRoundTotalTickets()) *
+                              100000
+                          ) / 1000
+                        )
+                          ? 0
+                          : Math.round(
+                              (getMyTicketCount() /
+                                getCurrentRoundTotalTickets()) *
+                                100000
+                            ) / 1000}
                         %
                       </span>
                     </div>
