@@ -9,7 +9,12 @@ const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing");
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
-const io = new Server(server, { cors: {} });
+const io = new Server(server, {
+  cors: {
+    origin: "https://emberplay.xyz",
+    methods: ["GET", "POST"],
+  },
+});
 const port = process.env.PORT || 8000;
 const maxRetries = 10;
 const walletMnemonic = process.env.WALLET_MNEMONIC;
