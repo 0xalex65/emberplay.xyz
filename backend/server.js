@@ -7,19 +7,10 @@ const { SigningCosmWasmClient } = require("@cosmjs/cosmwasm-stargate");
 const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing");
 
 const app = express();
-app.use(
-  cors({
-    origin: "https://emberplay.xyz",
-    methods: "*",
-  })
-);
+app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "https://emberplay.xyz",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
+  cors: {},
 });
 const port = process.env.PORT || 8000;
 const maxRetries = 10;
