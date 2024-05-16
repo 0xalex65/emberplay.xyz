@@ -96,8 +96,8 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
         // Update next draw time
         let new_draw_time = env.block.time.seconds() + 60 * 60;
         NEXT_DRAW.save(deps.storage, &new_draw_time)?;
-
-        return Err(ContractError::NoTickets {});
+        
+        return Ok(Response::new().add_attribute("next_draw", new_draw_time.to_string()));
     }
 
     // Random value generation
