@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
@@ -6,6 +7,7 @@ const { SigningCosmWasmClient } = require("@cosmjs/cosmwasm-stargate");
 const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing");
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, { cors: {} });
 const port = process.env.PORT || 8000;
