@@ -13,6 +13,7 @@ const io = new Server(server, {
   cors: {
     origin: "https://emberplay.xyz",
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 const port = process.env.PORT || 8000;
