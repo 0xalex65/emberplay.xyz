@@ -80,6 +80,12 @@ const Lottery = () => {
     return count;
   };
 
+  const getMyTicketCount = () => {
+    return currentRound.tickets.filter(
+      (ticket) => ticket.owner === wallet.address
+    )[0].count;
+  };
+
   const handleBuyTickets = async () => {
     if (!wallet.signer) {
       toast.warning("Please connect wallet");
@@ -186,6 +192,28 @@ const Lottery = () => {
                     STARS
                   </span>
                 </div>
+                {wallet.signer && (
+                  <div className="grid grid-cols-4 gap-5">
+                    <div></div>
+                    <div className="flex flex-col items-center gap-3">
+                      <span className="text-xl">My Tickets</span>
+                      <span className="font-semibold text-xl">
+                        {getMyTicketCount()}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center gap-3">
+                      <span className="text-xl">Winning Chance</span>
+                      <span className="font-semibold text-xl">
+                        {Math.round(
+                          (getMyTicketCount() / getCurrentRoundTotalTickets()) *
+                            100000
+                        ) / 1000}
+                        %
+                      </span>
+                    </div>
+                    <div></div>
+                  </div>
+                )}
                 <div className="w-full max-w-xs flex flex-col gap-5 items-center">
                   <div className="grid gap-2">
                     <div className="w-full flex h-[72px] rounded overflow-hidden bg-gray-900 relative">
@@ -215,6 +243,7 @@ const Lottery = () => {
                     </div>
                     <div className="w-full flex gap-1">
                       <Button
+                        disabled={loading}
                         className="!px-0"
                         fullWidth
                         onClick={() => setAmount(5)}
@@ -222,6 +251,7 @@ const Lottery = () => {
                         5
                       </Button>
                       <Button
+                        disabled={loading}
                         className="!px-0"
                         fullWidth
                         onClick={() => setAmount(10)}
@@ -229,6 +259,7 @@ const Lottery = () => {
                         10
                       </Button>
                       <Button
+                        disabled={loading}
                         className="!px-0"
                         fullWidth
                         onClick={() => setAmount(50)}
@@ -236,6 +267,7 @@ const Lottery = () => {
                         50
                       </Button>
                       <Button
+                        disabled={loading}
                         className="!px-0"
                         fullWidth
                         onClick={() => setAmount(100)}
@@ -243,6 +275,7 @@ const Lottery = () => {
                         100
                       </Button>
                       <Button
+                        disabled={loading}
                         className="!px-0"
                         fullWidth
                         onClick={() => setAmount(500)}
@@ -250,6 +283,7 @@ const Lottery = () => {
                         500
                       </Button>
                       <Button
+                        disabled={loading}
                         className="!px-0"
                         fullWidth
                         onClick={() => setAmount(1000)}

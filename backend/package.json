@@ -2,7 +2,6 @@
   "dependencies": {
     "@cosmjs/cosmwasm-stargate": "^0.32.3",
     "@cosmjs/proto-signing": "^0.32.3",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "socket.io": "^4.7.5"

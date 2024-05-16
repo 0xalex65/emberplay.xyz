@@ -1,7 +1,6 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const cors = require("cors");
 require("dotenv").config();
 const { SigningCosmWasmClient } = require("@cosmjs/cosmwasm-stargate");
 const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing");
@@ -9,16 +8,8 @@ const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "https://emberplay.xyz",
-    methods: ["GET", "POST"],
-  },
+  cors: {},
 });
-app.use(
-  cors({
-    origin: "https://emberplay.xyz",
-  })
-);
 const port = process.env.PORT || 8000;
 const maxRetries = 10;
 const walletMnemonic = process.env.WALLET_MNEMONIC;
