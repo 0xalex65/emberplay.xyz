@@ -23,7 +23,7 @@ const NFTs = () => {
       <div className="flex flex-col items-center gap-5 justify-center relative">
         <h3 className="font-bold text-4xl md:text-5xl">Our NFTs</h3>
         <Link
-          to="https://www.stargaze.zone/m/stars1s5l98e7rhe3d6f4cp67sv4q7qjaaffg8h0zaugzqyfgzzheyvepq9ykmm4/tokens"
+          to="https://www.stargaze.zone/l/stars1k4v0keqxvgngwag6grztpsrx506k4g32kz65hffp4jz5jhk9d6pqzg56ps"
           target="_blank"
           className="relative md:absolute right-0 bottom-0"
         >
