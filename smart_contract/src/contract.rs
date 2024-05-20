@@ -116,7 +116,7 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
     if let Some(winner) = winner_addr {
         // Reward distribution
         let total_pot = current_round.pot;
-        let winner_reward = total_pot.multiply_ratio(99u128, 100u128);
+        let winner_reward = total_pot.multiply_ratio(98u128, 100u128);
         let owner_fee = total_pot.multiply_ratio(1u128, 100u128);
 
         let owner = OWNER.load(deps.storage)?;

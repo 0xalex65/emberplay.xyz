@@ -187,7 +187,7 @@ const Lottery = () => {
                   <span>Reward for winners</span>
                   <img src={ChampionCup} className="w-32" />
                   <span className="font-semibold text-xl">
-                    {Math.floor(getCurrentRoundTotalTickets() * 0.99 * 100) /
+                    {Math.floor(getCurrentRoundTotalTickets() * 0.98 * 100) /
                       100}{" "}
                     STARS
                   </span>
