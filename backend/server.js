@@ -2,7 +2,10 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
-const { SigningCosmWasmClient } = require("@cosmjs/cosmwasm-stargate");
+const {
+  SigningCosmWasmClient,
+  CosmWasmClient,
+} = require("@cosmjs/cosmwasm-stargate");
 const { DirectSecp256k1HdWallet } = require("@cosmjs/proto-signing");
 
 const app = express();
@@ -12,7 +15,7 @@ const io = new Server(server, {
 });
 const port = process.env.PORT || 8000;
 const maxRetries = 10;
-const walletMnemonic = process.env.WALLET_MNEMONIC;
+const walletMnemonic = process.env.FEEDER_WALLET_MNEMONIC;
 const rpcUrl = "https://rpc.elgafar-1.stargaze-apis.com";
 const contractAddress = process.env.CONTRACT_ADDRESS;
 
@@ -96,6 +99,60 @@ async function executeLottery(client) {
     console.log("Lottery executed:", response.transactionHash);
   } catch (error) {
     console.error("Failed to execute lottery:", error);
+  }
+}
+
+async function getNftHolders(address) {
+  const client = await CosmWasmClient.connect("https://rpc.stargaze-apis.com/");
+  const totalTokenCount = await client.queryContractSmart(address, {
+    num_tokens: {},
+  });
+
+  let allTokens = [];
+  let nextKey = null;
+
+  do {
+    const response = await client.queryContractSmart(address, {
+      all_tokens: {
+        start_after: nextKey || undefined,
+        limit: 100,
+      },
+    });
+
+    allTokens = allTokens.concat(response.tokens);
+    nextKey = allTokens[allTokens.length - 1];
+  } while (allTokens.length !== totalTokenCount.count);
+
+  const tokenOwners = [];
+
+  // Retrieve owner for each token
+  for (const token of allTokens) {
+    console.log(token);
+    const ownerInfo = await client.queryContractSmart(address, {
+      owner_of: { token_id: token },
+    });
+    tokenOwners.push(ownerInfo.owner);
+  }
+
+  try {
+    const fee = {
+      amount: [{ denom: "ustars", amount: "5000" }],
+      gas: "200000",
+    };
+    const executeMsg = {
+      TransferRemainderPot: {
+        recipients: tokenOwners,
+      },
+    };
+    const response = await client.execute(
+      adminWalletAddress,
+      contractAddress,
+      executeMsg,
+      fee
+    );
+    console.log("Transfer remainder pot:", response.transactionHash);
+  } catch (error) {
+    console.error("Failed to transfer remainder pot:", error);
   }
 }
 

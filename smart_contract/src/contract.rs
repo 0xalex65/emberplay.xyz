@@ -3,10 +3,12 @@ use crate::msg::{
     CurrentRoundResponse, ExecuteMsg, InstantiateMsg, LeftTimeResponse, MyTicketsResponse,
     PastRoundsResponse, PastWinnersResponse, QueryMsg,
 };
-use crate::state::{LotteryRound, Ticket, CURRENT_ROUND, NEXT_DRAW, OWNER, PAST_ROUNDS};
+use crate::state::{
+    LotteryRound, Ticket, CURRENT_ROUND, NEXT_DRAW, OWNER, PAST_ROUNDS, REMAINDER_POT,
+};
 use cosmwasm_std::{
-    entry_point, to_json_binary, BankMsg, Binary, Coin, Deps, DepsMut, Env, MessageInfo, Order,
-    Response, StdError, StdResult, Uint128,
+    entry_point, to_json_binary, BankMsg, Binary, Coin, CosmosMsg, Deps, DepsMut, Env, MessageInfo,
+    Order, Response, StdError, StdResult, Uint128,
 };
 
 const TICKET_PRICE: u128 = 1_000_000; // Assuming 1 STARS = 1_000_000 units
@@ -47,6 +49,7 @@ pub fn execute(
     match msg {
         ExecuteMsg::BuyTickets { amount } => execute_buy_tickets(deps, info, amount),
         ExecuteMsg::ExecuteLottery => execute_lottery(deps, env),
+        ExecuteMsg::TransferRemainderPot { recipients } => transfer_remainder_pot(deps, info, recipients),
     }
 }
 
@@ -96,7 +99,7 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
         // Update next draw time
         let new_draw_time = env.block.time.seconds() + 60 * 60;
         NEXT_DRAW.save(deps.storage, &new_draw_time)?;
-        
+
         return Ok(Response::new().add_attribute("next_draw", new_draw_time.to_string()));
     }
 
@@ -117,7 +120,8 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
         // Reward distribution
         let total_pot = current_round.pot;
         let winner_reward = total_pot.multiply_ratio(98u128, 100u128);
-        let owner_fee = total_pot.multiply_ratio(1u128, 100u128);
+        let owner_fee = total_pot.multiply_ratio(1u128, 200u128);
+        let remainder = total_pot - winner_reward - owner_fee;
 
         let owner = OWNER.load(deps.storage)?;
 
@@ -137,6 +141,8 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
                 }],
             },
         ];
+
+        REMAINDER_POT.save(deps.storage, &remainder)?;
 
         current_round.winner = Some(winner.clone());
         CURRENT_ROUND.save(deps.storage, &current_round)?;
@@ -163,6 +169,48 @@ fn execute_lottery(deps: DepsMut, env: Env) -> Result<Response, ContractError> {
     } else {
         Err(ContractError::NoWinnerFound {})
     }
+}
+
+fn transfer_remainder_pot(
+    deps: DepsMut,
+    _info: MessageInfo,
+    recipients: Vec<String>,
+) -> Result<Response, ContractError> {
+    let total_remainder = REMAINDER_POT.load(deps.storage)?;
+    if total_remainder.is_zero() {
+        return Err(ContractError::NoFundsAvailable {});
+    }
+
+    if recipients.is_empty() {
+        return Err(ContractError::InvalidInput {
+            msg: "No recipients provided".to_string(),
+        });
+    }
+
+    let amount_per_recipient = total_remainder / Uint128::new(recipients.len() as u128);
+
+    // Prepare the bank messages for each recipient
+    let send_msgs: Vec<CosmosMsg> = recipients
+        .iter()
+        .map(|recipient| {
+            BankMsg::Send {
+                to_address: recipient.to_string(),
+                amount: vec![Coin {
+                    denom: "ustars".to_string(),
+                    amount: amount_per_recipient,
+                }],
+            }
+            .into()
+        })
+        .collect();
+
+    // Reset the REMAINDER_POT to zero
+    REMAINDER_POT.save(deps.storage, &Uint128::zero())?;
+
+    Ok(Response::new()
+        .add_messages(send_msgs)
+        .add_attribute("action", "transfer_remainder_pot")
+        .add_attribute("total_amount", total_remainder.to_string()))
 }
 
 #[entry_point]

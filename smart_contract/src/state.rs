@@ -21,3 +21,4 @@ pub const CURRENT_ROUND: Item<LotteryRound> = Item::new("current_round");
 pub const PAST_ROUNDS: Map<u64, LotteryRound> = Map::new("past_rounds");
 pub const OWNER: Item<Addr> = Item::new("owner");
 pub const NEXT_DRAW: Item<u64> = Item::new("next_draw");
+pub const REMAINDER_POT: Item<Uint128> = Item::new("remainder_pot");

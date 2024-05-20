@@ -20,4 +20,10 @@ pub enum ContractError {
 
     #[error("Too early to draw a new lottery round")]
     TooEarly {},
+
+    #[error("Insufficient funds in the remainder pot")]
+    NoFundsAvailable {},
+
+    #[error("Invalid input: {msg}")]
+    InvalidInput { msg: String },
 }

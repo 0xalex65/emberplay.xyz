@@ -10,6 +10,7 @@ pub struct InstantiateMsg {}
 pub enum ExecuteMsg {
     BuyTickets { amount: u128 },
     ExecuteLottery,
+    TransferRemainderPot { recipients: Vec<String> },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -18,7 +19,7 @@ pub enum QueryMsg {
     MyTickets { user: Option<String> },
     PastWinners { round_number: u64 },
     LeftTime,
-    AllPastRounds
+    AllPastRounds,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
